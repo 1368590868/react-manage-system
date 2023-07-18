@@ -52,6 +52,12 @@ export default [
     component: './TableList',
   },
   {
+    name: 'article-list',
+    icon: 'edit',
+    path: '/edit-article',
+    component: './EditArticle'
+  },
+  {
     path: '/',
     redirect: '/welcome',
   },

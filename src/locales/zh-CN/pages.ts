@@ -62,4 +62,15 @@ export default {
   'pages.searchTable.tenThousand': '万',
   'pages.searchTable.batchDeletion': '批量删除',
   'pages.searchTable.batchApproval': '批量审批',
+
+  'pages.articleTable.title': '文章列表',
+  'pages.searchTable.content': '内容',
+  'pages.searchTable.markdown': '文章内容',
+  'pages.searchTable.cover_image': '封面图',
+  'pages.searchTable.tags': '标签',
+  'pages.searchTable.read_count': '阅读数量',
+  'pages.searchTable.create_time': '创建时间',
+  'pages.searchTable.comment_count': '评论数量',
+  'pages.searchTable.edit': '编辑',
+  'pages.article-list': '编辑文章'
 };

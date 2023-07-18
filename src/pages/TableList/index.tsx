@@ -1,4 +1,5 @@
-import { addRule, removeRule, rule, updateRule } from '@/services/ant-design-pro/api';
+/* eslint-disable no-undef */
+import { addRule, removeRule, updateRule } from '@/services/ant-design-pro/api';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns, ProDescriptionsItemProps } from '@ant-design/pro-components';
 import {
@@ -11,17 +12,18 @@ import {
   ProTable,
 } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { Button, Drawer, Input, message } from 'antd';
-import React, { useRef, useState } from 'react';
+import { Button, Drawer, Image, Input, Select, Tag, Tooltip, message, theme } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
 import type { FormValueType } from './components/UpdateForm';
 import UpdateForm from './components/UpdateForm';
+import { ArticleService } from './service';
 
 /**
  * @en-US Add node
  * @zh-CN 添加节点
  * @param fields
  */
-const handleAdd = async (fields: API.RuleListItem) => {
+const handleAdd = async (fields: API.ArticleList) => {
   const hide = message.loading('正在添加');
   try {
     await addRule({ ...fields });
@@ -66,7 +68,7 @@ const handleUpdate = async (fields: FormValueType) => {
  *
  * @param selectedRows
  */
-const handleRemove = async (selectedRows: API.RuleListItem[]) => {
+const handleRemove = async (selectedRows: API.ArticleList[]) => {
   const hide = message.loading('正在删除');
   if (!selectedRows) return true;
   try {
@@ -84,6 +86,7 @@ const handleRemove = async (selectedRows: API.RuleListItem[]) => {
 };
 
 const TableList: React.FC = () => {
+  const { token } = theme.useToken();
   /**
    * @en-US Pop-up window of new window
    * @zh-CN 新建窗口的弹窗
@@ -98,8 +101,24 @@ const TableList: React.FC = () => {
   const [showDetail, setShowDetail] = useState<boolean>(false);
 
   const actionRef = useRef<ActionType>();
-  const [currentRow, setCurrentRow] = useState<API.RuleListItem>();
-  const [selectedRowsState, setSelectedRows] = useState<API.RuleListItem[]>([]);
+  const [currentRow, setCurrentRow] = useState<API.ArticleList>();
+  const [selectedRowsState, setSelectedRows] = useState<API.ArticleList[]>([]);
+  const [tagList, setTagList] = useState<API.TagList[]>();
+
+  const getTagList = async () => {
+    try {
+      const res = await ArticleService.getTagList();
+      if (res.code === 200) {
+        setTagList(res.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getTagList();
+  }, []);
 
   /**
    * @en-US International configuration
@@ -107,115 +126,84 @@ const TableList: React.FC = () => {
    * */
   const intl = useIntl();
 
-  const columns: ProColumns<API.RuleListItem>[] = [
+  const columns: ProColumns<API.ArticleList>[] = [
     {
-      title: (
-        <FormattedMessage
-          id="pages.searchTable.updateForm.ruleName.nameLabel"
-          defaultMessage="Rule name"
-        />
-      ),
-      dataIndex: 'name',
-      tip: 'The rule name is the unique key',
-      render: (dom, entity) => {
+      title: <FormattedMessage id="pages.articleTable.title" />,
+      dataIndex: 'title',
+      ellipsis: true,
+      hideInSearch: true,
+      render: (text) => <Tooltip>{text}</Tooltip>,
+    },
+    {
+      title: <FormattedMessage id="pages.searchTable.content" />,
+      dataIndex: 'content',
+      ellipsis: true,
+      hideInSearch: true,
+
+      render: (text) => <Tooltip>{text}</Tooltip>,
+    },
+    {
+      title: <FormattedMessage id="pages.searchTable.markdown" />,
+      dataIndex: 'markdown',
+      hideInSearch: true,
+      ellipsis: true,
+      render: (text) => <Tooltip>{text}</Tooltip>,
+    },
+    {
+      title: <FormattedMessage id="pages.searchTable.tags" defaultMessage="Tags" />,
+      dataIndex: 'tags',
+      renderFormItem: () => {
         return (
-          <a
-            onClick={() => {
-              setCurrentRow(entity);
-              setShowDetail(true);
-            }}
-          >
-            {dom}
-          </a>
+          <Select
+            showArrow
+            mode="multiple"
+            tagRender={({ label }) => <Tag color="blue">{label}</Tag>}
+            options={tagList && tagList.map((x) => ({ label: x.name, value: x.id }))}
+          />
         );
       },
-    },
-    {
-      title: <FormattedMessage id="pages.searchTable.titleDesc" defaultMessage="Description" />,
-      dataIndex: 'desc',
-      valueType: 'textarea',
-    },
-    {
-      title: (
-        <FormattedMessage
-          id="pages.searchTable.titleCallNo"
-          defaultMessage="Number of service calls"
-        />
-      ),
-      dataIndex: 'callNo',
-      sorter: true,
-      hideInForm: true,
-      renderText: (val: string) =>
-        `${val}${intl.formatMessage({
-          id: 'pages.searchTable.tenThousand',
-          defaultMessage: ' 万 ',
-        })}`,
-    },
-    {
-      title: <FormattedMessage id="pages.searchTable.titleStatus" defaultMessage="Status" />,
-      dataIndex: 'status',
-      hideInForm: true,
-      valueEnum: {
-        0: {
-          text: (
-            <FormattedMessage
-              id="pages.searchTable.nameStatus.default"
-              defaultMessage="Shut down"
-            />
-          ),
-          status: 'Default',
-        },
-        1: {
-          text: (
-            <FormattedMessage id="pages.searchTable.nameStatus.running" defaultMessage="Running" />
-          ),
-          status: 'Processing',
-        },
-        2: {
-          text: (
-            <FormattedMessage id="pages.searchTable.nameStatus.online" defaultMessage="Online" />
-          ),
-          status: 'Success',
-        },
-        3: {
-          text: (
-            <FormattedMessage
-              id="pages.searchTable.nameStatus.abnormal"
-              defaultMessage="Abnormal"
-            />
-          ),
-          status: 'Error',
-        },
-      },
-    },
-    {
-      title: (
-        <FormattedMessage
-          id="pages.searchTable.titleUpdatedAt"
-          defaultMessage="Last scheduled time"
-        />
-      ),
-      sorter: true,
-      dataIndex: 'updatedAt',
-      valueType: 'dateTime',
-      renderFormItem: (item, { defaultRender, ...rest }, form) => {
-        const status = form.getFieldValue('status');
-        if (`${status}` === '0') {
-          return false;
-        }
-        if (`${status}` === '3') {
+      render: (text: any) =>
+        text &&
+        text.map((tag: any) => {
           return (
-            <Input
-              {...rest}
-              placeholder={intl.formatMessage({
-                id: 'pages.searchTable.exception',
-                defaultMessage: 'Please enter the reason for the exception!',
-              })}
-            />
+            <Tag key={tag.id} color="blue">
+              {tag.name}
+            </Tag>
           );
-        }
-        return defaultRender(item);
-      },
+        }),
+    },
+    {
+      title: (
+        <FormattedMessage id="pages.searchTable.cover_image" defaultMessage="Last scheduled time" />
+      ),
+      dataIndex: 'cover_image',
+      hideInSearch: true,
+      ellipsis: true,
+      render: (text: any) => text.cover_image && <Image src={text.cover_image} />,
+    },
+    {
+      title: <FormattedMessage id="pages.searchTable.read_count" defaultMessage="read_count" />,
+      dataIndex: 'read_count',
+      hideInSearch: true,
+      ellipsis: true,
+      render: (text) => <Tooltip>{text}</Tooltip>,
+    },
+    {
+      title: (
+        <FormattedMessage id="pages.searchTable.comment_count" defaultMessage="comment_count" />
+      ),
+      dataIndex: 'comment_count',
+      hideInSearch: true,
+      ellipsis: true,
+      render: (text) => <Tooltip>{text}</Tooltip>,
+    },
+    {
+      title: <FormattedMessage id="pages.searchTable.create_time" defaultMessage="Created time" />,
+      dataIndex: 'create_time',
+      valueType: 'dateTime',
+      hideInSearch: true,
+      ellipsis: true,
+      render: (text) => <Tooltip>{text}</Tooltip>,
     },
     {
       title: <FormattedMessage id="pages.searchTable.titleOption" defaultMessage="Operating" />,
@@ -223,33 +211,48 @@ const TableList: React.FC = () => {
       valueType: 'option',
       render: (_, record) => [
         <a
-          key="config"
+          key="edit"
           onClick={() => {
             handleUpdateModalOpen(true);
             setCurrentRow(record);
           }}
         >
-          <FormattedMessage id="pages.searchTable.config" defaultMessage="Configuration" />
-        </a>,
-        <a key="subscribeAlert" href="https://procomponents.ant.design/">
-          <FormattedMessage
-            id="pages.searchTable.subscribeAlert"
-            defaultMessage="Subscribe to alerts"
-          />
+          <FormattedMessage id="pages.searchTable.edit" defaultMessage="Edit" />
         </a>,
       ],
     },
   ];
 
+  const getArticleList = async (params: API.PageParams) => {
+    const { tags = '' } = params;
+
+    try {
+      const res = await ArticleService.getArticleList({ tags, ...params });
+      return {
+        data: res.data.data,
+        total: res.data.total,
+        success: true,
+      };
+    } catch (error) {
+      console.log(error);
+    }
+
+    return {
+      data: [],
+      success: true,
+      total: 0,
+    };
+  };
+
   return (
     <PageContainer>
-      <ProTable<API.RuleListItem, API.PageParams>
+      <ProTable<API.ArticleList, API.PageParams>
         headerTitle={intl.formatMessage({
           id: 'pages.searchTable.title',
           defaultMessage: 'Enquiry form',
         })}
         actionRef={actionRef}
-        rowKey="key"
+        rowKey="id"
         search={{
           labelWidth: 120,
         }}
@@ -264,7 +267,7 @@ const TableList: React.FC = () => {
             <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" defaultMessage="New" />
           </Button>,
         ]}
-        request={rule}
+        request={getArticleList}
         columns={columns}
         rowSelection={{
           onChange: (_, selectedRows) => {
@@ -320,7 +323,7 @@ const TableList: React.FC = () => {
         open={createModalOpen}
         onOpenChange={handleModalOpen}
         onFinish={async (value) => {
-          const success = await handleAdd(value as API.RuleListItem);
+          const success = await handleAdd(value as API.ArticleList);
           if (success) {
             handleModalOpen(false);
             if (actionRef.current) {
@@ -377,7 +380,7 @@ const TableList: React.FC = () => {
         closable={false}
       >
         {currentRow?.name && (
-          <ProDescriptions<API.RuleListItem>
+          <ProDescriptions<API.ArticleList>
             column={2}
             title={currentRow?.name}
             request={async () => ({
@@ -386,7 +389,7 @@ const TableList: React.FC = () => {
             params={{
               id: currentRow?.name,
             }}
-            columns={columns as ProDescriptionsItemProps<API.RuleListItem>[]}
+            columns={columns as ProDescriptionsItemProps<API.ArticleList>[]}
           />
         )}
       </Drawer>
