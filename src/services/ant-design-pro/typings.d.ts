@@ -35,7 +35,23 @@ declare namespace API {
     tags?: string[] | never[];
   };
 
-  type ArticleList = { data: { id: string, title: string }[], total: number }
+  type ArticleList = {
+    id: any; data: { id: string, title: string }[], total: number
+  }
+
+  type ArticleDetail = {
+    title: string
+    content?: string
+    markdown: string
+    cover_image?: string
+    tags: TagList[]
+  }
+
+  type TagList = { id: string, name: string }
+
+  type ImageRes = {
+    url: string
+  }
 
   type ApiResponse<T> = {
     data: T;

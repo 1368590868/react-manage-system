@@ -29,11 +29,46 @@ export class ArticleService {
         });
     }
 
+    // 保存文章
+    static async saveArticle(data: API.ArticleDetail) {
+        return request<API.ApiResponse<API.ArticleList>>(`${url}/addArticle`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            method: 'POST',
+            data
+        });
+    }
+
+    // 获取文章详情
+    static async getArticleById(id: string) {
+        return request<API.ApiResponse<API.ArticleDetail>>(`${url}/getArticleById/${id}`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            method: 'GET'
+        });
+    }
+
     // 获取tag列表
     static async getTagList() {
-        return request<API.ApiResponse<API.TagList>>(`${url}/getTag`, {
+        return request<API.ApiResponse<API.TagList[]>>(`${url}/getTag`, {
 
             method: 'GET'
+        });
+    }
+
+    // 图片上传
+    static async uploadImage(file: any) {
+        const formData = new FormData();
+        if (file) {
+            formData.append('file', file);
+        }
+
+        return request<API.ApiResponse<API.ImageRes>>(`${url}/upload`, {
+            method: 'POST',
+            data: formData,
+            requestType: 'blob',
         });
     }
 }

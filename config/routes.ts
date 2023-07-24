@@ -54,8 +54,9 @@ export default [
   {
     name: 'article-list',
     icon: 'edit',
-    path: '/edit-article',
-    component: './EditArticle'
+    path: '/edit-article/:id',
+    component: './EditArticle',
+    hideInMenu: true,
   },
   {
     path: '/',

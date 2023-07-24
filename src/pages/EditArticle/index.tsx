@@ -1,9 +1,12 @@
+/* eslint-disable no-undef */
 import { PageContainer } from '@ant-design/pro-components';
-import { Button, Card, Col, Form, Input, InputNumber, Row } from 'antd';
+import { Button, Card, Col, Form, Input, InputNumber, Row, Select, message } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import React, { useState } from 'react';
 import MultiPicUploader from '../../components/MultiPicUploader';
 import MdEditor from '../../components/MdEditor';
+import { ArticleService } from '../TableList/service';
+import { useParams } from '@umijs/max';
 
 const FormItem = Form.Item;
 
@@ -51,6 +54,45 @@ const EditArticle = () => {
   // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
+  const { id } = useParams<{ id: string }>();
+  const [options, setOptions] = useState<{ label: string; value: string }[]>([]);
+  const [tagList, setTagList] = useState<API.TagList[]>();
+
+  const getTagList = async () => {
+    try {
+      const res = await ArticleService.getTagList();
+      if (res.code === 200) {
+        setTagList(res.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getArtcile = async () => {
+    setLoading(true);
+    try {
+      if (id) {
+        const res = await ArticleService.getArticleById(id);
+        if (res.code === 200) {
+          form.setFieldsValue(res.data);
+          if (res.data?.tags) {
+            const tagList = res.data.tags.map((item) => item.id);
+            form.setFieldsValue({ tags: tagList });
+          }
+        }
+      }
+    } catch (e: any) {
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  React.useEffect(() => {
+    getArtcile();
+    getTagList();
+  }, []);
 
   const doSubmit = async (values) => {
     console.log(values);
@@ -77,7 +119,7 @@ const EditArticle = () => {
             <MdEditor />
           </FormItem>
           <FormItem label="图片" name="cover_image">
-            <MultiPicUploader biz={'pic'} />
+            <MultiPicUploader />
           </FormItem>
           <FormItem
             {...submitFormLayout}
@@ -89,13 +131,20 @@ const EditArticle = () => {
               <InputNumber defaultValue={1} />
             </FormItem>
             <FormItem label="标签" name="tags">
-              <InputNumber defaultValue={1} />
+              <Select
+                mode="multiple"
+                style={{ width: '100%' }}
+                placeholder="Tags Mode"
+                options={tagList && tagList.map((x) => ({ label: x.name, value: x.id }))}
+              />
             </FormItem>
             <Row gutter={24}>
               <Col span={16}>
                 <Button
                   type="default"
-                  onClick={async () => {}}
+                  onClick={async () => {
+                    console.log(await form.validateFields());
+                  }}
                   loading={loading}
                   disabled={loading}
                 >

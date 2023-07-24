@@ -17,6 +17,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import type { FormValueType } from './components/UpdateForm';
 import UpdateForm from './components/UpdateForm';
 import { ArticleService } from './service';
+import { history } from '@umijs/max';
 
 /**
  * @en-US Add node
@@ -213,8 +214,7 @@ const TableList: React.FC = () => {
         <a
           key="edit"
           onClick={() => {
-            handleUpdateModalOpen(true);
-            setCurrentRow(record);
+            history.push(`/edit-article/${record.id}`);
           }}
         >
           <FormattedMessage id="pages.searchTable.edit" defaultMessage="Edit" />

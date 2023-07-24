@@ -1,12 +1,12 @@
+import { ArticleService } from '@/pages/TableList/service';
 import { PlusOutlined } from '@ant-design/icons';
 import { message, Modal, Upload } from 'antd';
 import type { UploadFile, UploadProps } from 'antd/es';
 import React, { useState } from 'react';
 
 interface Props {
-  biz: string;
-  onChange?: (files: UploadFile[]) => void;
-  value?: UploadFile[];
+  onChange?: (files: any) => void;
+  value?: string;
 }
 
 const getBase64 = (file: any): Promise<string> =>
@@ -39,10 +39,11 @@ function beforeUpload(file: File) {
  * @constructor
  */
 const MultiPicUploader: React.FC<Props> = (props) => {
-  const { biz, value = [], onChange } = props;
+  const { value = '', onChange } = props;
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
 
   const handleCancel = () => setPreviewOpen(false);
 
@@ -57,34 +58,57 @@ const MultiPicUploader: React.FC<Props> = (props) => {
   };
 
   const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
+    console.log('123123123123');
     onChange?.(newFileList);
   };
 
   const doUpload = async (fileObj: any) => {
-    console.log(fileObj);
+    try {
+      const res = await ArticleService.uploadImage(fileObj.file);
+      if (res.code === 200) {
+        message.success('上传成功');
+        onChange?.(res.data.url);
+        setFileList([{ url: res.data.url, uid: '-1', name: '封面图', status: 'done' }]);
+        setPreviewImage(res.data.url);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const uploadButton = (
-    <div>
-      <PlusOutlined />
-      <div style={{ marginTop: 8 }}>上传</div>
-    </div>
-  );
+  React.useEffect(() => {
+    console.log(value);
+    if (value) {
+      console.log(value);
+      setPreviewImage(value);
+      setFileList([{ url: value, uid: '-1', name: '封面图', status: 'done' }]);
+    }
+  }, []);
+
+  const uploadButton =
+    fileList.length > 0 ? (
+      ''
+    ) : (
+      <div>
+        <PlusOutlined />
+        <div style={{ marginTop: 8 }}>上传</div>
+      </div>
+    );
 
   return (
     <>
       <Upload
         listType="picture-card"
         multiple
-        maxCount={9}
+        maxCount={1}
         accept="image/jpeg,image/png,image/svg+xml,image/webp"
-        fileList={value}
+        fileList={fileList}
         onPreview={handlePreview}
         onChange={handleChange}
         beforeUpload={beforeUpload}
         customRequest={doUpload}
       >
-        {value.length >= 9 ? null : uploadButton}
+        {uploadButton}
       </Upload>
       <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
         <img alt="图片预览" style={{ width: '100%' }} src={previewImage} />

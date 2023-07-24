@@ -15,6 +15,7 @@ import 'bytemd/dist/index.css';
 import 'highlight.js/styles/vs.css';
 import 'github-markdown-css/github-markdown-light.css';
 import './index.less';
+import { ArticleService } from '@/pages/TableList/service';
 
 interface Props {
   value?: string;
@@ -51,14 +52,8 @@ const MdEditor: FC<Props> = (props) => {
    */
   const uploadPic = async (file: File) => {
     try {
-      // const res = await uploadFileUsingPOST(
-      //   {
-      //     biz: FILE_UPLOAD_BIZ_ENUM.POST_PICTURE,
-      //   },
-      //   {},
-      //   file,
-      // );
-      return res.data;
+      const res = await ArticleService.uploadImage(file);
+      return res.data.url;
     } catch (e: any) {
       message.error('上传失败，' + e.message);
       return null;
@@ -73,15 +68,18 @@ const MdEditor: FC<Props> = (props) => {
         mode="split"
         locale={locale}
         plugins={plugins}
-        // uploadImages={(files) => {
-        //   return Promise.all(
-        //     files.map(async (file) => {
-        //       return {
-        //         url: (await uploadPic(file)) ?? '',
-        //       };
-        //     }),
-        //   );
-        // }}
+        // @ts-ignore
+        uploadImages={(files) => {
+          return Promise.all(
+            files.map(async (file) => {
+              return {
+                url: (await uploadPic(file)) ?? '',
+                alt: file.name,
+                title: file.name,
+              };
+            }),
+          );
+        }}
         onChange={onChange}
       />
     </div>
