@@ -94,8 +94,16 @@ const EditArticle = () => {
     getTagList();
   }, []);
 
-  const doSubmit = async (values) => {
-    console.log(values);
+  const doSubmit = async () => {
+    try {
+      const values = await form.validateFields();
+      const res = await ArticleService.updateArticleById(id, values);
+      if (res.code === 200) {
+        message.success('更新成功');
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <PageContainer>
@@ -109,13 +117,13 @@ const EditArticle = () => {
           scrollToFirstError
           onFinish={doSubmit}
         >
-          <FormItem label="标题" name="title">
-            <Input required />
+          <FormItem label="标题" name="title" rules={[{ required: true, message: '必填' }]}>
+            <Input />
           </FormItem>
-          <FormItem label="内容" name="cotent">
+          <FormItem label="内容" name="content">
             <TextArea rows={4} />
           </FormItem>
-          <FormItem label="内容" name="markdown">
+          <FormItem label="内容" name="markdown" rules={[{ required: true, message: '必填' }]}>
             <MdEditor />
           </FormItem>
           <FormItem label="图片" name="cover_image">
@@ -140,14 +148,7 @@ const EditArticle = () => {
             </FormItem>
             <Row gutter={24}>
               <Col span={16}>
-                <Button
-                  type="default"
-                  onClick={async () => {
-                    console.log(await form.validateFields());
-                  }}
-                  loading={loading}
-                  disabled={loading}
-                >
+                <Button type="default" onClick={doSubmit} loading={loading} disabled={loading}>
                   提交
                 </Button>
               </Col>

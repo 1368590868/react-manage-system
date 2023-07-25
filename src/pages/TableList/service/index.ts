@@ -50,6 +50,17 @@ export class ArticleService {
         });
     }
 
+    // 更新文章
+    static async updateArticleById(id: string, data: API.ArticleDetail) {
+        return request<API.ApiResponse<API.ArticleList>>(`${url}/updateArticle/${id}`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            method: 'PUT',
+            data
+        })
+    }
+
     // 获取tag列表
     static async getTagList() {
         return request<API.ApiResponse<API.TagList[]>>(`${url}/getTag`, {
@@ -69,6 +80,15 @@ export class ArticleService {
             method: 'POST',
             data: formData,
             requestType: 'blob',
+        });
+    }
+}
+
+
+export class TagsService {
+    static async getTagList() {
+        return request<API.ApiResponse<API.TagList[]>>(`${url}/getTag`, {
+            method: 'GET'
         });
     }
 }

@@ -52,6 +52,12 @@ export default [
     component: './TableList',
   },
   {
+    name: 'list.table-list',
+    icon: 'table',
+    path: '/tags',
+    component: './TagsList',
+  },
+  {
     name: 'article-list',
     icon: 'edit',
     path: '/edit-article/:id',
