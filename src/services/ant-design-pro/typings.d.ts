@@ -47,7 +47,7 @@ declare namespace API {
     tags: TagList[]
   }
 
-  type TagList = { id: string, name: string }
+  type TagList = { id: string, name: string, color: string }
 
   type ImageRes = {
     url: string

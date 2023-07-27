@@ -57,7 +57,6 @@ export default {
   'pages.searchTable.titleOption': 'Option',
   'pages.searchTable.config': 'Configuration',
   'pages.searchTable.subscribeAlert': 'Subscribe to alerts',
-  'pages.searchTable.title': 'Enquiry Form',
   'pages.searchTable.new': 'New',
   'pages.searchTable.chosen': 'chosen',
   'pages.searchTable.item': 'item',
@@ -65,5 +64,8 @@ export default {
   'pages.searchTable.tenThousand': '0000',
   'pages.searchTable.batchDeletion': 'batch deletion',
   'pages.searchTable.batchApproval': 'batch approval',
+  // my page
   'pages.articleTable.title': 'Article List',
+  'pages.tagsList.title': 'Tags List',
+  'pages.searchTable.title': 'Search Table',
 };

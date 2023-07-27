@@ -61,13 +61,7 @@ export class ArticleService {
         })
     }
 
-    // 获取tag列表
-    static async getTagList() {
-        return request<API.ApiResponse<API.TagList[]>>(`${url}/getTag`, {
 
-            method: 'GET'
-        });
-    }
 
     // 图片上传
     static async uploadImage(file: any) {
@@ -86,9 +80,41 @@ export class ArticleService {
 
 
 export class TagsService {
+
+    // 获取tag列表
     static async getTagList() {
         return request<API.ApiResponse<API.TagList[]>>(`${url}/getTag`, {
+
             method: 'GET'
         });
+    }
+
+    static async updateTagById(id: string, data: API.TagList) {
+        return request<API.ApiResponse<API.TagList>>(`${url}/updateTag/${id}`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            method: 'PUT',
+            data
+        })
+    }
+
+    static async addTag(data: API.TagList) {
+        return request<API.ApiResponse<API.TagList>>(`${url}/addTag`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            method: 'POST',
+            data
+        })
+    }
+
+    static async deleteTagById(id: string) {
+        return request<API.ApiResponse<API.TagList>>(`${url}/deleteTag/${id}`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            method: 'DELETE',
+        })
     }
 }

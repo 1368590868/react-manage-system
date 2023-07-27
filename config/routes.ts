@@ -52,7 +52,7 @@ export default [
     component: './TableList',
   },
   {
-    name: 'list.table-list',
+    name: 'list.tags-list',
     icon: 'table',
     path: '/tags',
     component: './TagsList',

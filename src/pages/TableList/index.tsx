@@ -129,7 +129,7 @@ const TableList: React.FC = () => {
 
   const columns: ProColumns<API.ArticleList>[] = [
     {
-      title: <FormattedMessage id="pages.articleTable.title" />,
+      title: <FormattedMessage id="pages.tagsList.title" />,
       dataIndex: 'title',
       ellipsis: true,
       hideInSearch: true,

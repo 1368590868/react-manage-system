@@ -22,7 +22,6 @@ export default {
   'menu.form.step-form.result': 'Step Form(finished)',
   'menu.form.advanced-form': 'Advanced Form',
   'menu.list': 'List',
-  'menu.list.table-list': 'Search Table',
   'menu.list.basic-list': 'Basic List',
   'menu.list.card-list': 'Card List',
   'menu.list.search-list': 'Search List',
@@ -49,5 +48,8 @@ export default {
   'menu.editor.flow': 'Flow Editor',
   'menu.editor.mind': 'Mind Editor',
   'menu.editor.koni': 'Koni Editor',
-  'menu.article-list': '编辑文章'
+  'menu.article-list': '编辑文章',
+  // my menu
+  'menu.list.table-list': 'Article List',
+  'menu.list.tags-list': 'Tags List',
 };

@@ -54,7 +54,6 @@ export default {
   'pages.searchTable.titleOption': '操作',
   'pages.searchTable.config': '配置',
   'pages.searchTable.subscribeAlert': '订阅警报',
-  'pages.searchTable.title': '查询表格',
   'pages.searchTable.new': '新建',
   'pages.searchTable.chosen': '已选择',
   'pages.searchTable.item': '项',
@@ -63,6 +62,7 @@ export default {
   'pages.searchTable.batchDeletion': '批量删除',
   'pages.searchTable.batchApproval': '批量审批',
 
+  'pages.searchTable.title': '查询表格',
   'pages.articleTable.title': '文章列表',
   'pages.searchTable.content': '内容',
   'pages.searchTable.markdown': '文章内容',
@@ -72,5 +72,6 @@ export default {
   'pages.searchTable.create_time': '创建时间',
   'pages.searchTable.comment_count': '评论数量',
   'pages.searchTable.edit': '编辑',
+  'pages.searchTable.delete': '删除',
   'pages.article-list': '编辑文章'
 };
