@@ -2,15 +2,37 @@ import { ArticleService, TagsService } from '@/pages/TableList/service';
 import { ActionType } from '@ant-design/pro-components';
 import { Modal, Form, Button, Input, message } from 'antd';
 import React, { useImperativeHandle, useState } from 'react';
+import { SliderPicker } from 'react-color';
 
 interface Props {
   ref: any;
   actionRef: { current: ActionType | undefined };
 }
 
+interface ColorPickerProps {
+  value?: string;
+  // eslint-disable-next-line no-unused-vars
+  onChange?: (value: string) => void;
+}
+
 export interface EditModalRef {
+  // eslint-disable-next-line no-unused-vars
   showModal: (record: any) => void;
 }
+
+const ColorPicker: React.FC<ColorPickerProps> = ({ value, onChange }) => {
+  const [color, setColor] = useState('');
+
+  React.useEffect(() => {
+    setColor(value ?? 'red');
+  }, []);
+
+  const handleChange = (e: { hex: string }) => {
+    setColor(e.hex);
+    onChange?.(e.hex);
+  };
+  return <SliderPicker color={color} onChangeComplete={handleChange} />;
+};
 
 const EditModal: React.FC<Props> = React.forwardRef((props, ref) => {
   const { actionRef } = props;
@@ -65,7 +87,7 @@ const EditModal: React.FC<Props> = React.forwardRef((props, ref) => {
           <Input placeholder="填写 1 个标签" />
         </Form.Item>
         <Form.Item label="颜色" name="color">
-          <Input placeholder="blue" />
+          <ColorPicker />
         </Form.Item>
       </Form>
     </Modal>
