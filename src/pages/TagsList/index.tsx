@@ -3,7 +3,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { theme, Tooltip, Button, message } from 'antd';
+import { theme, Tooltip, Button, message, Tag } from 'antd';
 import { useState, useRef, useEffect } from 'react';
 import { ArticleService, TagsService } from '../TableList/service';
 import EditModal, { EditModalRef } from './component/EditModal';
@@ -49,7 +49,7 @@ const TagsList: React.FC = () => {
    * */
   const intl = useIntl();
 
-  const columns: ProColumns<API.ArticleList>[] = [
+  const columns: ProColumns<API.TagList>[] = [
     {
       title: 'id' ?? <FormattedMessage id="pages.searchTable.content" />,
       dataIndex: 'id',
@@ -70,7 +70,7 @@ const TagsList: React.FC = () => {
       dataIndex: 'color',
       ellipsis: true,
       hideInSearch: true,
-      render: (text) => <Tooltip>{text}</Tooltip>,
+      render: (_, record) => <Tag color={record.color}>{record.color}</Tag>,
     },
     {
       title: <FormattedMessage id="pages.searchTable.titleOption" defaultMessage="Operating" />,

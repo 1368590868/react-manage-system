@@ -5,7 +5,7 @@ import TextArea from 'antd/es/input/TextArea';
 import React, { useState } from 'react';
 import MultiPicUploader from '../../components/MultiPicUploader';
 import MdEditor from '../../components/MdEditor';
-import { ArticleService } from '../TableList/service';
+import { ArticleService, TagsService } from '../TableList/service';
 import { useParams } from '@umijs/max';
 
 const FormItem = Form.Item;
@@ -54,13 +54,12 @@ const EditArticle = () => {
   // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
-  const { id } = useParams<{ id: string }>();
-  const [options, setOptions] = useState<{ label: string; value: string }[]>([]);
+  const { id = '' } = useParams<{ id: string }>();
   const [tagList, setTagList] = useState<API.TagList[]>();
 
   const getTagList = async () => {
     try {
-      const res = await ArticleService.getTagList();
+      const res = await TagsService.getTagList();
       if (res.code === 200) {
         setTagList(res.data);
       }
@@ -97,9 +96,12 @@ const EditArticle = () => {
   const doSubmit = async () => {
     try {
       const values = await form.validateFields();
-      const res = await ArticleService.updateArticleById(id, values);
+      const res =
+        id !== 'add'
+          ? await ArticleService.updateArticleById(id, values)
+          : await ArticleService.saveArticle(values);
       if (res.code === 200) {
-        message.success('更新成功');
+        message.success(id !== 'add' ? '更新成功' : '新增成功');
       }
     } catch (error) {
       console.log(error);
@@ -148,7 +150,13 @@ const EditArticle = () => {
             </FormItem>
             <Row gutter={24}>
               <Col span={16}>
-                <Button type="default" onClick={doSubmit} loading={loading} disabled={loading}>
+                <Button
+                  type="primary"
+                  style={{ width: 300 }}
+                  onClick={doSubmit}
+                  loading={loading}
+                  disabled={loading}
+                >
                   提交
                 </Button>
               </Col>

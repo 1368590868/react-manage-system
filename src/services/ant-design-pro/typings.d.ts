@@ -32,26 +32,28 @@ declare namespace API {
   type PageParams = {
     current?: number;
     pageSize?: number;
-    tags?: string[] | never[];
+    tags: string[] | never[];
   };
 
   type ArticleList = {
-    id: any; data: { id: string, title: string }[], total: number
-  }
+    id: any;
+    data: { id: string; title: string }[];
+    total: number;
+  };
 
   type ArticleDetail = {
-    title: string
-    content?: string
-    markdown: string
-    cover_image?: string
-    tags: TagList[]
-  }
+    title: string;
+    content?: string;
+    markdown: string;
+    cover_image?: string;
+    tags: TagList[];
+  };
 
-  type TagList = { id: string, name: string, color: string }
+  type TagList = { id: string; name: string; color: string };
 
   type ImageRes = {
-    url: string
-  }
+    url: string;
+  };
 
   type ApiResponse<T> = {
     data: T;
@@ -101,7 +103,5 @@ declare namespace API {
     type?: NoticeIconItemType;
   };
 
-
-
-  type TagList = { id: string, name: string }
+  type TagList = { id: string; name: string };
 }

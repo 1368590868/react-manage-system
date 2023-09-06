@@ -64,6 +64,7 @@ export default {
 
   'pages.searchTable.title': '查询表格',
   'pages.articleTable.title': '文章列表',
+  'pages.articleTable.header': '标题',
   'pages.searchTable.content': '内容',
   'pages.searchTable.markdown': '文章内容',
   'pages.searchTable.cover_image': '封面图',
@@ -73,5 +74,5 @@ export default {
   'pages.searchTable.comment_count': '评论数量',
   'pages.searchTable.edit': '编辑',
   'pages.searchTable.delete': '删除',
-  'pages.article-list': '编辑文章'
+  'pages.article-list': '编辑文章',
 };

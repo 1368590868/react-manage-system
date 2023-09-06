@@ -68,4 +68,5 @@ export default {
   'pages.articleTable.title': 'Article List',
   'pages.tagsList.title': 'Tags List',
   'pages.searchTable.title': 'Search Table',
+  'pages.articleTable.header': 'Title',
 };

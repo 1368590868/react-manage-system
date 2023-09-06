@@ -58,7 +58,6 @@ const MultiPicUploader: React.FC<Props> = (props) => {
   };
 
   const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
-    console.log('123123123123');
     onChange?.(newFileList);
   };
 
@@ -77,13 +76,11 @@ const MultiPicUploader: React.FC<Props> = (props) => {
   };
 
   React.useEffect(() => {
-    console.log(value);
     if (value) {
-      console.log(value);
       setPreviewImage(value);
       setFileList([{ url: value, uid: '-1', name: '封面图', status: 'done' }]);
     }
-  }, []);
+  }, [value]);
 
   const uploadButton =
     fileList.length > 0 ? (
@@ -107,6 +104,9 @@ const MultiPicUploader: React.FC<Props> = (props) => {
         onChange={handleChange}
         beforeUpload={beforeUpload}
         customRequest={doUpload}
+        onRemove={() => {
+          // setFileList([]);
+        }}
       >
         {uploadButton}
       </Upload>
