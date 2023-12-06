@@ -58,7 +58,7 @@ const MultiPicUploader: React.FC<Props> = (props) => {
   };
 
   const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
-    onChange?.(newFileList);
+    setFileList(newFileList);
   };
 
   const doUpload = async (fileObj: any) => {
@@ -105,7 +105,7 @@ const MultiPicUploader: React.FC<Props> = (props) => {
         beforeUpload={beforeUpload}
         customRequest={doUpload}
         onRemove={() => {
-          // setFileList([]);
+          onChange?.('');
         }}
       >
         {uploadButton}

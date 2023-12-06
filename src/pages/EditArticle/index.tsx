@@ -89,7 +89,8 @@ const EditArticle = () => {
   };
 
   React.useEffect(() => {
-    getArtcile();
+    if (id !== 'add') getArtcile();
+
     getTagList();
   }, []);
 
