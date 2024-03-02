@@ -25,7 +25,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ value, onChange }) => {
 
   React.useEffect(() => {
     setColor(value ?? 'red');
-  }, []);
+  }, [value]);
 
   const handleChange = (e: { hex: string }) => {
     setColor(e.hex);
