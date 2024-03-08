@@ -41,6 +41,10 @@ declare namespace API {
     total: number;
   };
 
+  type DeleteArticle = {
+    success: boolean;
+  };
+
   type ArticleDetail = {
     title: string;
     content?: string;

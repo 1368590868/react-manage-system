@@ -3,7 +3,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { Button, Image, Select, Space, Tag, Tooltip, theme } from 'antd';
+import { Button, Image, Popconfirm, Select, Space, Tag, Tooltip, theme } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { ArticleService, TagsService } from './service';
 import { history } from '@umijs/max';
@@ -52,13 +52,6 @@ const TableList: React.FC = () => {
       render: (text) => <Tooltip>{text}</Tooltip>,
     },
     {
-      title: <FormattedMessage id="pages.searchTable.markdown" />,
-      dataIndex: 'markdown',
-      hideInSearch: true,
-      ellipsis: true,
-      render: (text) => <Tooltip>{text}</Tooltip>,
-    },
-    {
       title: <FormattedMessage id="pages.searchTable.tags" defaultMessage="Tags" />,
       dataIndex: 'tags',
       renderFormItem: () => {
@@ -104,17 +97,20 @@ const TableList: React.FC = () => {
       title: (
         <FormattedMessage id="pages.searchTable.comment_count" defaultMessage="comment_count" />
       ),
-      dataIndex: 'comment_count',
+      dataIndex: 'comments',
       hideInSearch: true,
       ellipsis: true,
+      width: 100,
+      align: 'center',
       render: (text) => <Tooltip>{text}</Tooltip>,
     },
     {
       title: <FormattedMessage id="pages.searchTable.create_time" defaultMessage="Created time" />,
-      dataIndex: 'create_time',
+      dataIndex: 'createTime',
       valueType: 'dateTime',
       hideInSearch: true,
       ellipsis: true,
+      align: 'center',
       render: (text) => <Tooltip>{text}</Tooltip>,
     },
     {
@@ -130,6 +126,26 @@ const TableList: React.FC = () => {
         >
           <FormattedMessage id="pages.searchTable.edit" defaultMessage="Edit" />
         </a>,
+        <Popconfirm
+          title="删除选项"
+          description="确定删除吗?"
+          onConfirm={async () => {
+            try {
+              const {
+                data: { success },
+              } = await ArticleService.deleteArticle(record.id);
+              if (success) {
+                actionRef.current?.reload();
+              }
+            } catch {}
+          }}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Button danger type="text">
+            <FormattedMessage id="pages.searchTable.delete" defaultMessage="Delete" />
+          </Button>
+        </Popconfirm>,
       ],
     },
   ];
@@ -175,7 +191,7 @@ const TableList: React.FC = () => {
               history.push('/edit-article/add');
             }}
           >
-            <PlusOutlined /> <FormattedMessage id="pages.searchTable.new" defaultMessage="New" />
+            <PlusOutlined /> <FormattedMessage id="pages.articleTable.new" defaultMessage="New" />
           </Button>,
         ]}
         request={getArticleList}

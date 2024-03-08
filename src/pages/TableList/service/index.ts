@@ -28,6 +28,19 @@ export class ArticleService {
     });
   }
 
+  // 删除文章
+  static async deleteArticle(id: string) {
+    return request<API.ApiResponse<API.DeleteArticle>>(`${url}/deleteArticle`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'DELETE',
+      data: {
+        id,
+      },
+    });
+  }
+
   // 保存文章
   static async saveArticle(data: API.ArticleDetail) {
     return request<API.ApiResponse<API.ArticleList>>(`${url}/addArticle`, {
