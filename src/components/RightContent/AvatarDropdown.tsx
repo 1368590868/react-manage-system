@@ -74,13 +74,14 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
 
   const loading = (
     <span className={actionClassName}>
-      <Spin
+      {/* <Spin
         size="small"
         style={{
           marginLeft: 8,
           marginRight: 8,
         }}
-      />
+      /> */}
+      Mu Mu
     </span>
   );
 
