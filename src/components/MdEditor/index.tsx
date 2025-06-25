@@ -19,7 +19,7 @@ import { ArticleService } from '@/pages/TableList/service';
 
 interface Props {
   value?: string;
-  onChange?: (v: string) => void;
+  onChange?: () => void;
   placeholder?: string;
 }
 
@@ -41,7 +41,6 @@ const plugins = [
 /**
  * Markdown 编辑器
  *
- * @author yupi
  */
 const MdEditor: FC<Props> = (props) => {
   const { value = '', onChange, placeholder } = props;

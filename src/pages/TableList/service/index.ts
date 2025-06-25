@@ -1,6 +1,7 @@
 /*global API*/
 import { request } from '@@/plugin-request';
-const url = 'http://114.115.157.58:3002/api';
+// const url = 'http://114.115.157.58:3002/api';
+const url = 'https://irlin.cn/api';
 /** 获取所有文章 */
 export class ArticleService {
   static async getArticleList(

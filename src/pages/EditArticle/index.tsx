@@ -95,6 +95,7 @@ const EditArticle = () => {
   }, []);
 
   const doSubmit = async () => {
+    setLoading(true);
     try {
       const values = await form.validateFields();
       const res =
@@ -106,10 +107,12 @@ const EditArticle = () => {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
   return (
-    <PageContainer>
+    <PageContainer >
       <Card bordered={false} style={{ width: '100%' }}>
         <Form
           {...formItemLayout}
@@ -126,7 +129,7 @@ const EditArticle = () => {
           <FormItem label="内容" name="content">
             <TextArea rows={4} />
           </FormItem>
-          <FormItem label="内容" name="markdown" rules={[{ required: true, message: '必填' }]}>
+          <FormItem label="文章内容" name="markdown" rules={[{ required: true, message: '必填' }]}>
             <MdEditor />
           </FormItem>
           <FormItem label="图片" name="cover_image">
@@ -138,8 +141,8 @@ const EditArticle = () => {
               marginTop: 32,
             }}
           >
-            <FormItem label="阅读数" name="read_count">
-              <InputNumber defaultValue={1} />
+            <FormItem label="阅读数" name="read_count" initialValue={1}>
+              <InputNumber />
             </FormItem>
             <FormItem label="标签" name="tags">
               <Select
